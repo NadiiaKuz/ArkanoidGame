@@ -52,6 +52,7 @@
     <Compile Include="FrmArkanoidMain.Designer.cs">
       <DependentUpon>FrmArkanoidMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameObjects\Positioning\GameObjectPosition.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmArkanoidMain.resx">
@@ -78,6 +79,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Engine\" />
+    <Folder Include="GameObjects\Instances\" />
+    <Folder Include="GameObjects\MovingDirection\" />
+    <Folder Include="Graphics\" />
+    <Folder Include="Statistics\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
