@@ -52,7 +52,11 @@
     <Compile Include="FrmArkanoidMain.Designer.cs">
       <DependentUpon>FrmArkanoidMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameObjects\MovingDirection\IDiagonalMovingDirection.cs" />
+    <Compile Include="GameObjects\MovingDirection\IMovingDirection.cs" />
+    <Compile Include="GameObjects\MovingDirection\SimpleDiagonalMovingDirection.cs" />
     <Compile Include="GameObjects\Positioning\GameObjectPosition.cs" />
+    <Compile Include="GameObjects\Positioning\WallPosition.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmArkanoidMain.resx">
@@ -83,7 +87,6 @@
   <ItemGroup>
     <Folder Include="Engine\" />
     <Folder Include="GameObjects\Instances\" />
-    <Folder Include="GameObjects\MovingDirection\" />
     <Folder Include="Graphics\" />
     <Folder Include="Statistics\" />
   </ItemGroup>
