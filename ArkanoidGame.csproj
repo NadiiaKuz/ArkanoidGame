@@ -52,6 +52,10 @@
     <Compile Include="FrmArkanoidMain.Designer.cs">
       <DependentUpon>FrmArkanoidMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameObjects\GameObject.cs" />
+    <Compile Include="GameObjects\IBouncingDiagonalMovingGameObject.cs" />
+    <Compile Include="GameObjects\IDiagonalMovingGameObject.cs" />
+    <Compile Include="GameObjects\IMovingGameObject.cs" />
     <Compile Include="GameObjects\MovingDirection\IDiagonalMovingDirection.cs" />
     <Compile Include="GameObjects\MovingDirection\IMovingDirection.cs" />
     <Compile Include="GameObjects\MovingDirection\SimpleDiagonalMovingDirection.cs" />
