@@ -56,6 +56,9 @@
     <Compile Include="GameObjects\IBouncingDiagonalMovingGameObject.cs" />
     <Compile Include="GameObjects\IDiagonalMovingGameObject.cs" />
     <Compile Include="GameObjects\IMovingGameObject.cs" />
+    <Compile Include="GameObjects\Instances\BouncingBall.cs" />
+    <Compile Include="GameObjects\Instances\RectangularGameObject.cs" />
+    <Compile Include="GameObjects\Instances\StaticBlock.cs" />
     <Compile Include="GameObjects\MovingDirection\IDiagonalMovingDirection.cs" />
     <Compile Include="GameObjects\MovingDirection\IMovingDirection.cs" />
     <Compile Include="GameObjects\MovingDirection\SimpleDiagonalMovingDirection.cs" />
@@ -90,7 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Engine\" />
-    <Folder Include="GameObjects\Instances\" />
     <Folder Include="Graphics\" />
     <Folder Include="Statistics\" />
   </ItemGroup>
