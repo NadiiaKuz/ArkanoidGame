@@ -21,7 +21,7 @@ namespace ArkanoidGame.GameObjects.Instances
         protected bool reachedFailureConstraint;
         protected int movingSpeed;
         protected GameObject movingPlatform;
-        protected List<GameObject> destroyingStaticBloks;
+        protected List<GameObject> destroyingStaticBlocks;
         protected bool happenedCollisionWithBounceFromObject;
         protected IDiagonalMovingDirection diagonalMovingDirection;
 
@@ -66,5 +66,245 @@ namespace ArkanoidGame.GameObjects.Instances
             position.X += movingSpeed;
             position.Y += movingSpeed;
         }
+
+        public void InitRandomDiagonalMovingDirection()
+        {
+            IDiagonalMovingDirection direction = new SimpleDiagonalMovingDirection();
+            direction.InitRandomDirection();
+            SetMovingDirection(direction);
+        }
+
+        public void InitRandomSafeDiagonalMovingDirection()
+        {
+            IDiagonalMovingDirection safeDirection = new SimpleDiagonalMovingDirection();
+            safeDirection.InitRandomSafeDirection();
+            SetMovingDirection(safeDirection);
+        }
+
+        public void MoveAtCurrentDirection()
+        {
+            if (diagonalMovingDirection == null || diagonalMovingDirection.IsNotMoving())
+            {
+                return;
+            }
+
+            if (diagonalMovingDirection.IsMovingUpLeft())
+            {
+                MoveUpLeft();
+            }
+            else if (diagonalMovingDirection.IsMovingUpRight())
+            {
+                MoveUpRight();
+            }
+            else if (diagonalMovingDirection.IsMovingDownLeft())
+            {
+                MoveDownLeft();
+            }
+            else if (diagonalMovingDirection.IsMovingDownRight())
+            {
+                MoveDownRight();
+            }
+        }
+
+        public bool IsCollisionWithBounceFromObject(int newX, int newY)
+        {
+            if (movingPlatform.Position.Y > newY + GetObjectRectangle().Height)
+            {
+                return false;
+            }
+
+            if (movingPlatform.Position.X > newX + GetObjectRectangle().Width ||
+                movingPlatform.Position.X + movingPlatform.GetObjectRectangle().Width < newX)
+            {
+                return false;
+            }
+
+            happenedCollisionWithBounceFromObject = true;
+
+            OnInitPositiveGameAction();
+
+            return true;
+        }
+
+        public bool IsCollisionWithDestroyingObjects(int newX, int newY)
+        {
+            if (destroyingStaticBlocks == null || destroyingStaticBlocks.Count == 0)
+            {
+                return false;
+            }
+
+            List<StaticBlock> destroyedBlocks = new List<StaticBlock>();
+            bool isCollisionWithOneOfTheBlocks = false;
+
+            foreach (GameObject blockGameObject in destroyingStaticBlocks)
+            {
+                if (blockGameObject.Position.Y + blockGameObject.GetObjectRectangle().Height < newY)
+                {
+                    continue;
+                }
+
+                if (blockGameObject.Position.X > newX + GetObjectRectangle().Width ||
+                    blockGameObject.Position.X + blockGameObject.GetObjectRectangle().Width < newX)
+                {
+                    continue;
+                }
+
+                if (blockGameObject is StaticBlock staticBlock)
+                {
+                    isCollisionWithOneOfTheBlocks = true;
+                    if (staticBlock.CurrentHits + 1 >= staticBlock.HitsToDestroy)
+                    {
+                        destroyedBlocks.Add(staticBlock);
+                    }
+                    else
+                    {
+                        staticBlock.CurrentHits++;
+                    }
+                }
+            }
+
+            if (isCollisionWithOneOfTheBlocks)
+            {
+                List<GameObject> destroyedBlockObjects = new List<GameObject>(destroyedBlocks);
+                OnCollapsedWithOtherObjects(destroyedBlockObjects);
+                destroyingStaticBlocks.RemoveAll(block => block is StaticBlock staticBlock && destroyedBlocks.Contains(staticBlock));
+
+                wallPosition = WallPosition.WallFromTheTop;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CanMoveAtCurrentDirection(int lowerBoundX, int upperBoundX, int lowerBoundY, int upperBoundY, int upperBoundXDelta, int upperBoundYDelta)
+        {
+            if (diagonalMovingDirection == null || diagonalMovingDirection.IsNotMoving())
+            {
+                return false;
+            }
+
+            int newX = 0;
+            int newY = 0;
+
+            if (diagonalMovingDirection.IsMovingUpLeft())
+            {
+                newX = position.X - movingSpeed;
+                newY = position.Y - movingSpeed;
+
+                if (IsCollisionWithDestroyingObjects(newX, newY))
+                {
+                    return false;
+                }
+
+
+
+                if (position.X - movingSpeed > lowerBoundX)
+                {
+                    if (position.Y - movingSpeed > upperBoundY)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        wallPosition = WallPosition.WallFromTheTop;
+                    }
+                }
+                else
+                {
+                    wallPosition = WallPosition.WallFromTheLeft;
+                }
+            }
+            else if (diagonalMovingDirection.IsMovingUpRight())
+            {
+                newX = position.X + movingSpeed;
+                newY = position.Y - movingSpeed;
+
+                if (IsCollisionWithDestroyingObjects(newX, newY))
+                {
+                    return false;
+                }
+
+                if (position.X + movingSpeed + GetObjectRectangle().Width + upperBoundXDelta < upperBoundX)
+                {
+                    if (position.Y - movingSpeed > lowerBoundY)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        wallPosition = WallPosition.WallFromTheTop;
+                    }
+                }
+                else
+                {
+                    wallPosition = WallPosition.WallFromTheRight;
+                }
+            }
+            else if (diagonalMovingDirection.IsMovingDownLeft())
+            {
+                newX = position.X - movingSpeed;
+                newY = position.Y + movingSpeed + GetObjectRectangle().Height + upperBoundYDelta;
+
+                if (IsCollisionWithBounceFromObject(position.X, position.Y))
+                {
+                    return false;
+                }
+
+                if (newX > lowerBoundX)
+                {
+                    if (newY < upperBoundY)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        wallPosition = WallPosition.WallFromTheBottom;
+                        if (wallPosition == failureWallConstraint)
+                        {
+                            OnInitIncrementNumberOfFailures();
+                            reachedFailureConstraint = true;
+                        }
+                    }
+                }
+                else
+                {
+                    wallPosition = WallPosition.WallFromTheLeft;
+                }
+            }
+            else if (diagonalMovingDirection.IsMovingDownRight())
+            {
+                newX = position.X + movingSpeed + GetObjectRectangle().Width + upperBoundXDelta;
+                newY = position.Y + movingSpeed + GetObjectRectangle().Height + upperBoundYDelta;
+
+                if (IsCollisionWithBounceFromObject(position.X, position.Y))
+                {
+                    return false;
+                }
+
+                if (newX < upperBoundX)
+                {
+                    if (newY < upperBoundY)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        wallPosition = WallPosition.WallFromTheBottom;
+                        if (wallPosition == failureWallConstraint)
+                        {
+                            OnInitIncrementNumberOfFailures();
+                            reachedFailureConstraint = true;
+                        }
+                    }
+                }
+                else
+                {
+                    wallPosition = WallPosition.WallFromTheRight;
+                }
+            }
+
+            return false;
+        }
+
     }
 }
