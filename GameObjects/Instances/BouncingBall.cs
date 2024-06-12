@@ -306,5 +306,51 @@ namespace ArkanoidGame.GameObjects.Instances
             return false;
         }
 
+        private void BounceWhenMovingUpLeft()
+        {
+            if (wallPosition == WallPosition.WallFromTheLeft)
+            {
+                diagonalMovingDirection.ChangeDirectionToUpRight();
+            }
+            else if (wallPosition == WallPosition.WallFromTheTop)
+            {
+                diagonalMovingDirection.ChangeDirectionToDownLeft();
+            }
+        }
+
+        private void BounceWhenMovingUpRight()
+        {
+            if (wallPosition == WallPosition.WallFromTheRight)
+            {
+                diagonalMovingDirection.ChangeDirectionToUpLeft();
+            }
+            else if (wallPosition == WallPosition.WallFromTheTop)
+            {
+                diagonalMovingDirection.ChangeDirectionToDownRight();
+            }
+        }
+
+        private void CheckForCollisionWithPlatform(Action actionIfCollisionHappened)
+        {
+            if (happenedCollisionWithBounceFromObject)
+            {
+                actionIfCollisionHappened.Invoke();
+                happenedCollisionWithBounceFromObject = false;
+            }
+        }
+
+        private void CheckForCollisionWithPlatformAndBounceWhenMovingDownLeft()
+        {
+            CheckForCollisionWithPlatform(() => diagonalMovingDirection.ChangeDirectionToUpLeft());
+
+            if (wallPosition == WallPosition.WallFromTheLeft)
+            {
+                diagonalMovingDirection.ChangeDirectionToDownRight();
+            }
+            else if (wallPosition == WallPosition.WallFromTheBottom)
+            {
+                diagonalMovingDirection.ChangeDirectionToUpLeft();
+            }
+        }
     }
 }
