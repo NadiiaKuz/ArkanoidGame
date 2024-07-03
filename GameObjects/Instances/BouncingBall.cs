@@ -214,7 +214,7 @@ namespace ArkanoidGame.GameObjects.Instances
                     wallPosition = WallPosition.WallFromTheLeft;
                 }
             }
-            else if (diagonalMovingDirection.IsMovingUpRight())
+            if (diagonalMovingDirection.IsMovingUpRight())
             {
                 newX = position.X + movingSpeed;
                 newY = position.Y - movingSpeed;
@@ -240,7 +240,7 @@ namespace ArkanoidGame.GameObjects.Instances
                     wallPosition = WallPosition.WallFromTheRight;
                 }
             }
-            else if (diagonalMovingDirection.IsMovingDownLeft())
+            if (diagonalMovingDirection.IsMovingDownLeft())
             {
                 newX = position.X - movingSpeed;
                 newY = position.Y + movingSpeed + GetObjectRectangle().Height + upperBoundYDelta;
@@ -271,7 +271,7 @@ namespace ArkanoidGame.GameObjects.Instances
                     wallPosition = WallPosition.WallFromTheLeft;
                 }
             }
-            else if (diagonalMovingDirection.IsMovingDownRight())
+            if (diagonalMovingDirection.IsMovingDownRight())
             {
                 newX = position.X + movingSpeed + GetObjectRectangle().Width + upperBoundXDelta;
                 newY = position.Y + movingSpeed + GetObjectRectangle().Height + upperBoundYDelta;
@@ -312,7 +312,7 @@ namespace ArkanoidGame.GameObjects.Instances
             {
                 diagonalMovingDirection.ChangeDirectionToUpRight();
             }
-            else if (wallPosition == WallPosition.WallFromTheTop)
+            if (wallPosition == WallPosition.WallFromTheTop)
             {
                 diagonalMovingDirection.ChangeDirectionToDownLeft();
             }
@@ -324,7 +324,7 @@ namespace ArkanoidGame.GameObjects.Instances
             {
                 diagonalMovingDirection.ChangeDirectionToUpLeft();
             }
-            else if (wallPosition == WallPosition.WallFromTheTop)
+            if (wallPosition == WallPosition.WallFromTheTop)
             {
                 diagonalMovingDirection.ChangeDirectionToDownRight();
             }
@@ -347,10 +347,99 @@ namespace ArkanoidGame.GameObjects.Instances
             {
                 diagonalMovingDirection.ChangeDirectionToDownRight();
             }
-            else if (wallPosition == WallPosition.WallFromTheBottom)
+            if (wallPosition == WallPosition.WallFromTheBottom)
             {
                 diagonalMovingDirection.ChangeDirectionToUpLeft();
             }
+        }
+
+        private void CheckForCollisionWithPlatformAndBounceWhenMovingDownRight()
+        {
+            CheckForCollisionWithPlatform(() => diagonalMovingDirection.ChangeDirectionToUpRight());
+
+            if (wallPosition == WallPosition.WallFromTheRight)
+            {
+                diagonalMovingDirection.ChangeDirectionToDownLeft();
+            }
+            if (wallPosition == WallPosition.WallFromTheBottom)
+            {
+                diagonalMovingDirection.ChangeDirectionToUpRight();
+            }
+        }
+
+        public void Bounce()
+        {
+            if (diagonalMovingDirection == null || diagonalMovingDirection.IsNotMoving())
+            {
+                return;
+            }
+
+            if (diagonalMovingDirection.IsMovingUpLeft())
+            {
+                BounceWhenMovingUpLeft();
+            }
+            if (diagonalMovingDirection.IsMovingUpRight())
+            {
+                BounceWhenMovingUpRight();
+            }
+            if (diagonalMovingDirection.IsMovingDownLeft())
+            {
+                CheckForCollisionWithPlatformAndBounceWhenMovingDownLeft();
+            }
+            if (diagonalMovingDirection.IsMovingDownRight())
+            {
+                CheckForCollisionWithPlatformAndBounceWhenMovingDownRight();
+            }
+        }
+
+        public void SetWallFailureConstraint(WallPosition failureWallConstraint)
+        {
+            this.failureWallConstraint = failureWallConstraint;
+        }
+
+        public bool ReachedWallFailureConstraint()
+        {
+            return reachedFailureConstraint;
+        }
+
+        public void SetMovingSpeed(int speed)
+        {
+            movingSpeed = speed; 
+        }
+
+        public int GetMovingSpeed()
+        {
+            return movingSpeed;
+        }
+
+        public void SetBounceFromObject(GameObject gameObject)
+        {
+            movingPlatform = gameObject;
+        }
+
+        public void ResetReachedWallFailureConstraint()
+        {
+            reachedFailureConstraint = false;
+        }
+
+        public void InitRandomMovingDirection()
+        {
+            InitRandomDiagonalMovingDirection();
+        }
+
+        public IDiagonalMovingDirection GetMovingDirection()
+        {
+            return diagonalMovingDirection;
+        }
+
+        public void SetMovingDirection(IDiagonalMovingDirection movingDirection)
+        {
+            this.diagonalMovingDirection = movingDirection;
+        }
+
+        public void SetBounceFromDestroyingObjects(List<GameObject> destroyingGameObjects)
+        {
+            this.destroyingStaticBlocks = destroyingGameObjects;
         }
     }
 }
