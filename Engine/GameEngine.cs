@@ -1,5 +1,6 @@
 ﻿using ArkanoidGame.GameObjects;
 using ArkanoidGame.GameObjects.Instances;
+using ArkanoidGame.GameObjects.Positioning;
 using ArkanoidGame.Statistics;
 using System.Collections.Generic;
 using System.Drawing;
@@ -218,6 +219,28 @@ namespace ArkanoidGame.Engine
             }
         }
 
+        public void InitGameObjectsPositionsAndState()
+        {
+            ResetObjectsPositions();
 
+            gameStats.AddGameCounter(GAME_STATS_PUSHED_AWAY_BALLS_TOTAL, 0);
+            gameStats.AddGameCounter(GAME_STATS_PUSHED_AWAY_BALLS_CURRENT, 0);
+            gameStats.AddGameCounter(GAME_STATS_LEVEL, 1);
+            gameStats.AddGameCounter(GAME_STATS_CURRENT_BALL_SPEED, BALL_STARTING_SPEED);
+
+            ball.CollapsedWithOtherObjects += Ball_CollapsedWithOtherObjects;
+            ball.InitIncrementNumberOfFailures += Ball_InitIncrementNumberOfFailures;
+            ball.InitPositiveGameAction += Ball_InitPositiveGameAction;
+
+            IBouncingDiagonalMovingGameObject bouncingBall = ball as IBouncingDiagonalMovingGameObject;
+
+            bouncingBall.SetBounceFromObject(platform);
+
+            GenerateBlocksAndSetThemAsDestroyingObjects(bouncingBall);
+
+            InitializeBallMovement(bouncingBall);
+
+            bouncingBall.SetWallFailureConstraint(WallPosition.WallFromTheBottom);
+        }
     }
 }
