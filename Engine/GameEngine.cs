@@ -2,8 +2,8 @@
 using ArkanoidGame.GameObjects.Instances;
 using ArkanoidGame.Statistics;
 using System.Collections.Generic;
-using System.Security.AccessControl;
-using System.Threading;
+using System.Drawing;
+using Timer = System.Windows.Forms.Timer;
 
 namespace ArkanoidGame.Engine
 {
@@ -51,6 +51,171 @@ namespace ArkanoidGame.Engine
             timer = gameTimer;
             GameFieldWidth = gameFieldWidth;
             GameFieldHeight = gameFieldHeight;
+        }
+
+        public void StartGame()
+        {
+            InitGameObjectsPositionsAndState();
+            timer.Start();
+        }
+
+        private void GenerateBlocksForCurrentLevel()
+        {
+            int blockWidth = 60;
+            int blockHeight = 15;
+
+            blocks.Clear();
+
+            int currentGameLevel = gameStats.GetGameCounterValue(GAME_STATS_LEVEL);
+
+            switch (currentGameLevel)
+            {
+                case 1:
+                    for (int blockLayer = 1; blockLayer <= 2; blockLayer++)
+                    {
+                        for (int n = 1; n <= 7; n++)
+                        {
+                            StaticBlock block = new StaticBlock("Block #" + n + ", row #" + blockLayer, blockWidth, blockHeight);
+                            block.Position.X = (n - 1) * blockWidth;
+                            block.Position.Y = (blockLayer - 1) * blockHeight;
+                            block.BorderColor = Color.Orange;
+                            block.BodyColor = Color.Purple;
+                            block.HitsToDestroy = 1;
+                            blocks.Add(block);
+                        }
+                    }
+                    break;
+                case 2:
+                    for (int blockLayer = 1; blockLayer <= 3; blockLayer++)
+                    {
+                        for (int n = 1; n <= 7; n++)
+                        {
+                            StaticBlock block = new StaticBlock("Block #" + n + ", row #" + blockLayer, blockWidth, blockHeight);
+                            block.Position.X = (n - 1) * blockWidth;
+                            block.Position.Y = (blockLayer - 1) * blockHeight;
+                            block.BorderColor = Color.Orange;
+                            if (blockLayer == 1)
+                            {
+                                block.BodyColor = Color.Blue;
+                                block.HitsToDestroy = 2;
+                            }
+                            else
+                            {
+                                block.BodyColor = Color.Purple;
+                                block.HitsToDestroy = 1;
+                            }
+                            blocks.Add(block);
+                        }
+                    }
+                    break;
+                case 3:
+                    for (int blockLayer = 1; blockLayer <= 4; blockLayer++)
+                    {
+                        for (int n = 1; n <= 7; n++)
+                        {
+                            StaticBlock block = new StaticBlock("Block #" + n + ", row #" + blockLayer, blockWidth, blockHeight);
+                            block.Position.X = (n - 1) * blockWidth;
+                            block.Position.Y = (blockLayer - 1) * blockHeight;
+                            block.BorderColor = Color.Orange;
+                            if (blockLayer == 1 || blockLayer == 2)
+                            {
+                                block.BodyColor = Color.Blue;
+                                block.HitsToDestroy = 2;
+                            }
+                            else
+                            {
+                                block.BodyColor = Color.Purple;
+                                block.HitsToDestroy = 1;
+                            }
+                            blocks.Add(block);
+                        }
+                    }
+                    break;
+                case 4:
+                    for (int blockLayer = 1; blockLayer <= 4; blockLayer++)
+                    {
+                        for (int n = 1; n <= 7; n++)
+                        {
+                            StaticBlock block = new StaticBlock("Block #" + n + ", row #" + blockLayer, blockWidth, blockHeight);
+                            block.Position.X = (n - 1) * blockWidth;
+                            block.Position.Y = (blockLayer - 1) * blockHeight;
+                            block.BorderColor = Color.Orange;
+                            if (blockLayer == 1)
+                            {
+                                block.BodyColor = Color.Brown; 
+                                block.HitsToDestroy = 3;
+                            }
+                            if (blockLayer == 2)
+                            {
+                                block.BodyColor = Color.Blue;
+                                block.HitsToDestroy = 2;
+                            }
+                            else
+                            {
+                                block.BodyColor = Color.Purple;
+                                block.HitsToDestroy = 1;
+                            }
+                            blocks.Add(block);
+                        }
+                    }
+                    break;
+                case 5:
+                    for (int blockLayer = 1; blockLayer <= 4; blockLayer++)
+                    {
+                        for (int n = 1; n <= 7; n++)
+                        {
+                            StaticBlock block = new StaticBlock("Block #" + n + ", row #" + blockLayer, blockWidth, blockHeight);
+                            block.Position.X = (n - 1) * blockWidth;
+                            block.Position.Y = (blockLayer - 1) * blockHeight;
+                            block.BorderColor = Color.Orange;
+                            if (blockLayer == 1)
+                            {
+                                block.BodyColor = Color.Brown;
+                                block.HitsToDestroy = 3;
+                            }
+                            if (blockLayer == 2 || blockLayer == 3)
+                            {
+                                block.BodyColor = Color.Blue;
+                                block.HitsToDestroy = 2;
+                            }
+                            else
+                            {
+                                block.BodyColor = Color.Purple;
+                                block.HitsToDestroy = 1;
+                            }
+                            blocks.Add(block);
+                        }
+                    }
+                    break;
+                case 6:
+                    for (int blockLayer = 1; blockLayer <= 5; blockLayer++)
+                    {
+                        for (int n = 1; n <= 7; n++)
+                        {
+                            StaticBlock block = new StaticBlock("Block #" + n + ", row #" + blockLayer, blockWidth, blockHeight);
+                            block.Position.X = (n - 1) * blockWidth;
+                            block.Position.Y = (blockLayer - 1) * blockHeight;
+                            block.BorderColor = Color.Orange;
+                            if (blockLayer == 1 || blockLayer == 2)
+                            {
+                                block.BodyColor = Color.Brown;
+                                block.HitsToDestroy = 3;
+                            }
+                            if (blockLayer == 3 || blockLayer == 4)
+                            {
+                                block.BodyColor = Color.Blue;
+                                block.HitsToDestroy = 2;
+                            }
+                            else
+                            {
+                                block.BodyColor = Color.Purple;
+                                block.HitsToDestroy = 1;
+                            }
+                            blocks.Add(block);
+                        }
+                    }
+                    break;
+            }
         }
 
 
