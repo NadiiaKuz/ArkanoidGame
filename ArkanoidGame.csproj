@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\GameEngine.cs" />
     <Compile Include="FrmArkanoidMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,7 +94,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Engine\" />
     <Folder Include="Graphics\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
