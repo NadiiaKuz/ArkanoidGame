@@ -2,6 +2,7 @@
 using ArkanoidGame.GameObjects.Instances;
 using ArkanoidGame.GameObjects.Positioning;
 using ArkanoidGame.Statistics;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Timer = System.Windows.Forms.Timer;
@@ -241,6 +242,41 @@ namespace ArkanoidGame.Engine
             InitializeBallMovement(bouncingBall);
 
             bouncingBall.SetWallFailureConstraint(WallPosition.WallFromTheBottom);
+        }
+
+        private void Ball_InitPositiveGameAction(object sender, EventArgs e)
+        {
+            gameStats.IncrementGameCounter(GAME_STATS_PUSHED_AWAY_BALLS_TOTAL);
+            gameStats.IncrementGameCounter(GAME_STATS_PUSHED_AWAY_BALLS_CURRENT);
+        }
+
+        private void Ball_InitIncrementNumberOfFailures(object sender, EventArgs e)
+        {
+            gameStats.InctementNumberOfFailures();
+        }
+
+        private void Ball_CollapsedWithOtherObjects(object sender, ICollection<GameObject> destroyedBlocks)
+        {
+            Blocks.RemoveAll(block => destroyedBlocks.Contains(block));
+        }
+
+        private void GenerateBlocksAndSetThemAsDestroyingObjects(IBouncingDiagonalMovingGameObject bouncingBall)
+        {
+            GenerateBlocksForCurrentLevel();
+            List<GameObject> destroyingBlocks = new List<GameObject>(blocks);
+            bouncingBall.SetBounceFromDestroyingObjects(destroyingBlocks);
+        }
+
+        public void ResetObjectsPositions()
+        {
+            platform.SetPosition(GameFieldWidth / 2 - platformWidth / 2, GameFieldHeight - platformHeight - bottomMargin);
+            ball.SetPosition(GameFieldWidth / 2 - ballRadius, GameFieldHeight / 2 - ballRadius);
+        }
+
+        public void InitializeBallMovement(IBouncingDiagonalMovingGameObject bouncingBall)
+        {
+            bouncingBall.InitRandomSafeDiagonalMovingDirection();
+            bouncingBall.SetMovingSpeed(BALL_STARTING_SPEED);
         }
     }
 }
