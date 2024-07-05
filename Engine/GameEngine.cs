@@ -278,5 +278,98 @@ namespace ArkanoidGame.Engine
             bouncingBall.InitRandomSafeDiagonalMovingDirection();
             bouncingBall.SetMovingSpeed(BALL_STARTING_SPEED);
         }
+
+        public void ResetGame()
+        {
+            gameStats.ResetGameCounter(GAME_STATS_PUSHED_AWAY_BALLS_CURRENT);
+            gameStats.SetGameCounterValue(GAME_STATS_LEVEL, 1);
+            gameStats.SetGameCounterValue(GAME_STATS_CURRENT_BALL_SPEED, BALL_STARTING_SPEED);
+            ResetObjectsPositions();
+            GenerateBlocksAndSetThemAsDestroyingObjects(ball as IBouncingDiagonalMovingGameObject);
+            InitializeBallMovement(ball as IBouncingDiagonalMovingGameObject);
+            
+            (platform as RectangularGameObject).Width = platformWidth;
+        }
+
+        public void HandleMouseMove(Point mouseCursorLocation)
+        {
+            RectangularGameObject rectangularPlatform = platform as RectangularGameObject;
+            if (rectangularPlatform.CanMoveToPointWhenCentered(mouseCursorLocation, 0, GameFieldWidth, 15))
+            {
+                rectangularPlatform.SetPositionCenteredHorizontally(mouseCursorLocation.X);
+            }
+        }
+
+        public void CheckForGameLevelIncrease()
+        {
+            if (blocks.Count > 0)
+            {
+                return;
+            }
+
+            int currentPushedAwayBalls = gameStats.GetGameCounterValue(GAME_STATS_PUSHED_AWAY_BALLS_CURRENT);
+            int currentGameLevel = gameStats.GetGameCounterValue(GAME_STATS_LEVEL);
+
+            IBouncingDiagonalMovingGameObject bouncingBall = ball as IBouncingDiagonalMovingGameObject;
+            RectangularGameObject rectPlayerPlatform = platform as RectangularGameObject;
+
+            int currentBallSpeed = bouncingBall.GetMovingSpeed();
+
+            for (int level = 1; level <= TOTAL_GAME_LEVELS_TO_WIN; level++)
+            {
+                if (currentGameLevel == level)
+                {
+                    gameStats.IncrementGameCounter(GAME_STATS_LEVEL);
+
+                    GenerateBlocksAndSetThemAsDestroyingObjects(bouncingBall);
+
+                    int newBallSpeed = currentBallSpeed + 1;
+
+                    bouncingBall.SetMovingSpeed(newBallSpeed);
+                    gameStats.SetGameCounterValue(GAME_STATS_CURRENT_BALL_SPEED, newBallSpeed);
+
+                    rectPlayerPlatform.Width -= 10;
+                    break;
+                }
+            }
+        }
+
+        public void PauseGame(Action actionWhenPaused)
+        {
+            timer.Stop();
+            isGamePaused = true;
+            actionWhenPaused.Invoke();
+        }
+
+        public void UnpauseGame()
+        {
+            timer.Start();
+            isGamePaused = false;
+        }
+
+        public void ToggleGamePauseMode(Action actionWhenPaused)
+        {
+            if (isGamePaused)
+            {
+                UnpauseGame();
+            }
+            else
+            {
+                PauseGame(actionWhenPaused);
+            }
+        }
+
+        public void RestartGame()
+        {
+            if (!timer.Enabled)
+            {
+                IBouncingDiagonalMovingGameObject bouncingMovingBall = ball as IBouncingDiagonalMovingGameObject;
+                bouncingMovingBall.ResetReachedWallFailureConstraint();
+                ResetGame();
+                timer.Start();
+            }
+        }
+
+
     }
 }
