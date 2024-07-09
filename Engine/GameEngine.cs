@@ -147,7 +147,7 @@ namespace ArkanoidGame.Engine
                                 block.BodyColor = Color.Brown; 
                                 block.HitsToDestroy = 3;
                             }
-                            if (blockLayer == 2)
+                            else if (blockLayer == 2)
                             {
                                 block.BodyColor = Color.Blue;
                                 block.HitsToDestroy = 2;
@@ -175,7 +175,7 @@ namespace ArkanoidGame.Engine
                                 block.BodyColor = Color.Brown;
                                 block.HitsToDestroy = 3;
                             }
-                            if (blockLayer == 2 || blockLayer == 3)
+                            else if (blockLayer == 2 || blockLayer == 3)
                             {
                                 block.BodyColor = Color.Blue;
                                 block.HitsToDestroy = 2;
@@ -203,7 +203,7 @@ namespace ArkanoidGame.Engine
                                 block.BodyColor = Color.Brown;
                                 block.HitsToDestroy = 3;
                             }
-                            if (blockLayer == 3 || blockLayer == 4)
+                            else if (blockLayer == 3 || blockLayer == 4)
                             {
                                 block.BodyColor = Color.Blue;
                                 block.HitsToDestroy = 2;

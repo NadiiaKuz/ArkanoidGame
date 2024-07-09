@@ -196,8 +196,6 @@ namespace ArkanoidGame.GameObjects.Instances
                     return false;
                 }
 
-
-
                 if (position.X - movingSpeed > lowerBoundX)
                 {
                     if (position.Y - movingSpeed > upperBoundY)
@@ -214,7 +212,7 @@ namespace ArkanoidGame.GameObjects.Instances
                     wallPosition = WallPosition.WallFromTheLeft;
                 }
             }
-            if (diagonalMovingDirection.IsMovingUpRight())
+            else if (diagonalMovingDirection.IsMovingUpRight())
             {
                 newX = position.X + movingSpeed;
                 newY = position.Y - movingSpeed;
@@ -240,7 +238,7 @@ namespace ArkanoidGame.GameObjects.Instances
                     wallPosition = WallPosition.WallFromTheRight;
                 }
             }
-            if (diagonalMovingDirection.IsMovingDownLeft())
+            else if (diagonalMovingDirection.IsMovingDownLeft())
             {
                 newX = position.X - movingSpeed;
                 newY = position.Y + movingSpeed + GetObjectRectangle().Height + upperBoundYDelta;
@@ -271,7 +269,7 @@ namespace ArkanoidGame.GameObjects.Instances
                     wallPosition = WallPosition.WallFromTheLeft;
                 }
             }
-            if (diagonalMovingDirection.IsMovingDownRight())
+            else if (diagonalMovingDirection.IsMovingDownRight())
             {
                 newX = position.X + movingSpeed + GetObjectRectangle().Width + upperBoundXDelta;
                 newY = position.Y + movingSpeed + GetObjectRectangle().Height + upperBoundYDelta;
@@ -312,7 +310,7 @@ namespace ArkanoidGame.GameObjects.Instances
             {
                 diagonalMovingDirection.ChangeDirectionToUpRight();
             }
-            if (wallPosition == WallPosition.WallFromTheTop)
+            else if (wallPosition == WallPosition.WallFromTheTop)
             {
                 diagonalMovingDirection.ChangeDirectionToDownLeft();
             }
@@ -324,7 +322,7 @@ namespace ArkanoidGame.GameObjects.Instances
             {
                 diagonalMovingDirection.ChangeDirectionToUpLeft();
             }
-            if (wallPosition == WallPosition.WallFromTheTop)
+            else if (wallPosition == WallPosition.WallFromTheTop)
             {
                 diagonalMovingDirection.ChangeDirectionToDownRight();
             }
@@ -347,7 +345,7 @@ namespace ArkanoidGame.GameObjects.Instances
             {
                 diagonalMovingDirection.ChangeDirectionToDownRight();
             }
-            if (wallPosition == WallPosition.WallFromTheBottom)
+            else if (wallPosition == WallPosition.WallFromTheBottom)
             {
                 diagonalMovingDirection.ChangeDirectionToUpLeft();
             }
@@ -361,7 +359,7 @@ namespace ArkanoidGame.GameObjects.Instances
             {
                 diagonalMovingDirection.ChangeDirectionToDownLeft();
             }
-            if (wallPosition == WallPosition.WallFromTheBottom)
+            else if (wallPosition == WallPosition.WallFromTheBottom)
             {
                 diagonalMovingDirection.ChangeDirectionToUpRight();
             }
@@ -378,15 +376,15 @@ namespace ArkanoidGame.GameObjects.Instances
             {
                 BounceWhenMovingUpLeft();
             }
-            if (diagonalMovingDirection.IsMovingUpRight())
+            else if (diagonalMovingDirection.IsMovingUpRight())
             {
                 BounceWhenMovingUpRight();
             }
-            if (diagonalMovingDirection.IsMovingDownLeft())
+            else if (diagonalMovingDirection.IsMovingDownLeft())
             {
                 CheckForCollisionWithPlatformAndBounceWhenMovingDownLeft();
             }
-            if (diagonalMovingDirection.IsMovingDownRight())
+            else if (diagonalMovingDirection.IsMovingDownRight())
             {
                 CheckForCollisionWithPlatformAndBounceWhenMovingDownRight();
             }

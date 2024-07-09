@@ -40,7 +40,7 @@ namespace ArkanoidGame
             {
                 gameEngine.ToggleGamePauseMode(() => Invalidate());
             }
-            if (e.KeyCode == Keys.Escape)
+            else if (e.KeyCode == Keys.Escape)
             {
                 gameEngine.PauseGame(() => Invalidate());
 
@@ -54,11 +54,11 @@ namespace ArkanoidGame
                     gameEngine.UnpauseGame();
                 }
             }
-            if (e.KeyCode == Keys.Enter)
+            else if (e.KeyCode == Keys.Enter)
             {
                 gameEngine.ResetGame();
             }
-            if (e.KeyCode == Keys.S)
+            else if (e.KeyCode == Keys.S)
             {
                 gameEngine.IsShowStats = !gameEngine.IsShowStats;
             }
@@ -70,7 +70,7 @@ namespace ArkanoidGame
             {
                 gameEngine.ToggleGamePauseMode(() => Invalidate());
             }
-            if (e.Button == MouseButtons.Middle)
+            else if (e.Button == MouseButtons.Middle)
             {
                 gameEngine.IsShowStats = !gameEngine.IsShowStats;
             }
