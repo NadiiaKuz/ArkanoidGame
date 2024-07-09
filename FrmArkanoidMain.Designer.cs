@@ -28,7 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.GameIterationTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // GameIterationTimer
+            // 
+            this.GameIterationTimer.Interval = 10;
+            this.GameIterationTimer.Tick += new System.EventHandler(this.GameIterationTimer_Tick);
             // 
             // FrmArkanoidMain
             // 
@@ -42,11 +49,18 @@
             this.Name = "FrmArkanoidMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Arkanoid Game";
+            this.Load += new System.EventHandler(this.FrmArkanoidMain_Load);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.FrmArkanoidMain_Paint);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmArkanoidMain_KeyDown);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.FrmArkanoidMain_MouseClick);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FrmArkanoidMain_MouseMove);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer GameIterationTimer;
     }
 }
 
