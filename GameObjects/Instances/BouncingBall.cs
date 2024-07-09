@@ -40,7 +40,7 @@ namespace ArkanoidGame.GameObjects.Instances
 
         public override Rectangle GetObjectRectangle()
         {
-            return new Rectangle(position.X, position.Y, 2 * radius, 2 * radius);
+            return new Rectangle(position.X, position.Y, 2 * Radius, 2 * Radius);
         }
 
         public void MoveUpRight()
@@ -198,7 +198,7 @@ namespace ArkanoidGame.GameObjects.Instances
 
                 if (position.X - movingSpeed > lowerBoundX)
                 {
-                    if (position.Y - movingSpeed > upperBoundY)
+                    if (position.Y - movingSpeed > lowerBoundY)
                     {
                         return true;
                     }
