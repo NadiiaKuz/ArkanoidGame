@@ -370,6 +370,54 @@ namespace ArkanoidGame.Engine
             }
         }
 
+        public void HandleGameCycle(Action actionIfWinHappened, Func<bool> funcIsContinueWhenGameIsOver, Func<int, bool> funcIsRepeatAfterWin)
+        {
+            IBouncingDiagonalMovingGameObject bouncingMovingBall = ball as IBouncingDiagonalMovingGameObject;
 
+            if (bouncingMovingBall.CanMoveAtCurrentDirection(0, GameFieldWidth, 0, GameFieldHeight, 15, 37))
+            {
+                bouncingMovingBall.MoveAtCurrentDirection();
+            }
+            else
+            {
+                if (bouncingMovingBall.ReachedWallFailureConstraint())
+                {
+                    timer.Stop();
+                    if (funcIsContinueWhenGameIsOver.Invoke())
+                    {
+                        bouncingMovingBall.ResetReachedWallFailureConstraint();
+                        ResetGame();
+                        timer.Start();
+                    }
+                }
+                else
+                {
+                    bouncingMovingBall.Bounce();
+                    CheckForGameLevelIncrease();
+                    CheckForWin(() =>
+                    {
+                        timer.Stop();
+                        actionIfWinHappened.Invoke();
+                    },
+                    funcIsRepeatAfterWin);
+                }
+            }
+        }
+
+        public void CheckForWin(Action actionIfWinHappened, Func<int, bool> funcIsRepeatAfterWin)
+        {
+            int currentGameLevel = gameStats.GetGameCounterValue(GAME_STATS_LEVEL);
+
+            if (currentGameLevel == TOTAL_GAME_LEVELS_TO_WIN)
+            {
+                gameStats.IncrementNumberOfWins();
+                actionIfWinHappened.Invoke();
+                if (funcIsRepeatAfterWin.Invoke(currentGameLevel))
+                {
+                    ResetGame();
+                    timer.Start();
+                }
+            }
+        }
     }
 }
